@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI个性化学习助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add Font Awesome for the microphone icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Add Sidebar -->
+    <div class="sidebar">
+        <button class="sidebar-btn active" data-section="chat">
+            <span>问答</span>
+        </button>
+        <button class="sidebar-btn" data-section="quiz">
+            <span>出题</span>
+        </button>
+        <!-- Move API status here -->
+        <div id="api-status" class="api-status">
+            <span class="status-dot"></span>
+            <span class="status-text">API 状态: 未连接</span>
+        </div>
+        <!-- Copyright at bottom of sidebar -->
+        <div class="copyright">
+            Content powered by DeekSeek. Page created with Github Copilot. Alex Luo @ 2025/3.
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Quiz Section -->
+        <div class="container quiz-section-container" style="display: none;">
+            <div class="settings-panel">
+                <div class="settings-group">
+                    <h3>基本设置</h3>
+                    <div class="dropdown-container">
+                        <div class="dropdown-group">
+                            <label for="school">学校:</label>
+                            <select id="school">
+                                <option value="primary">小学</option>
+                                <option value="middle">初中</option>
+                                <option value="high">高中</option>
+                            </select>
+                        </div>
+                        <div class="dropdown-group">
+                            <label for="grade">年级:</label>
+                            <select id="grade">
+                                <option value="1">一年级</option>
+                                <option value="2">二年级</option>
+                                <option value="3">三年级</option>
+                                <option value="4">四年级</option>
+                                <option value="5">五年级</option>
+                                <option value="6">六年级</option>
+                            </select>
+                        </div>
+                        <div class="dropdown-group">
+                            <label for="semester">学期:</label>
+                            <select id="semester">
+                                <option value="first">上学期</option>
+                                <option value="second">下学期</option>
+                            </select>
+                        </div>
+                        <div class="dropdown-group">
+                            <label for="subject">学科:</label>
+                            <select id="subject">
+                                <option value="math">数学</option>
+                                <option value="chinese">语文</option>
+                                <option value="english">英语</option>
+                                <option value="science">科学</option>
+                                <option value="geography">地理</option>
+                                <option value="history">历史</option>
+                                <option value="biology">生物</option>
+                                <option value="physics">物理</option>
+                            </select>
+                        </div>
+                        <div class="dropdown-group">
+                            <label for="difficulty">难度:</label>
+                            <select id="difficulty">
+                                <option value="easy">低</option>
+                                <option value="medium" selected>中</option>
+                                <option value="hard">高</option>
+                            </select>
+                        </div>
+                        <div class="dropdown-group">
+                            <label for="questionCount">题数:</label>
+                            <select id="questionCount">
+                                <option value="5">5题</option>
+                                <option value="10">10题</option>
+                                <option value="15">15题</option>
+                                <option value="20">20题</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Removed help-panel with keyboard shortcuts -->
+            </div>
+
+            <!-- Remove progress-section completely -->
+
+            <div class="status-info-bar">
+                <div class="question-info">
+                    <span class="question-number">题目 1/5</span>
+                    <!-- Remove timer -->
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="start-btn" class="primary-btn">
+                    开始出题
+                    <div class="loading-indicator" style="display: none;">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="quiz-section" style="display: none">
+                <div class="question-header">
+                    <span class="question-number">题目 1/5</span>
+                    <!-- Remove question timer span -->
+                </div>
+                <div class="score-display" style="display: none">
+                    <div class="score-text"></div>
+                    <div class="score-details"></div>
+                    <button id="analyze-btn" class="analyze-btn">评估表现</button>
+                </div>
+                <div id="question-box" class="question-box"></div>
+                <div id="options-box" class="options-box"></div>
+                <button id="submit-btn" class="submit-btn" style="display: none">提交答案</button>
+                <div id="explanation-box" class="explanation-box"></div>
+            </div>
+
+            <!-- Removed feedback-section with confidence meter -->
+
+            <!-- Modified navigation panel -->
+            <div class="navigation-panel-fixed" style="display: none">
+                <div class="nav-buttons-container">
+                    <button id="regenerate-btn" class="nav-btn regenerate-btn">重新生成题目</button>
+                    <button id="prev-btn" class="nav-btn">上一题</button>
+                    <button id="next-btn" class="nav-btn">下一题</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="container chat-interface" style="display: block;">
+            <h3>你好呀！我是你的AI老师，有什么可以帮你的吗？</h3>
+            <div class="chat-controls">
+                <div class="chat-input-section">
+                    <textarea class="chat-input" placeholder="输入您的问题..." rows="3"></textarea>
+                </div>
+                <!-- New row for voice + dropdown + submit -->
+                <div class="chat-controls-bottom">
+                    <div class="chat-controls-left">
+                        <button class="voice-input-btn"><i class="fas fa-microphone"></i></button>
+                        <select class="lang-select" title="选择语音识别语言">
+                            <option value="zh-CN">中文</option>
+                            <option value="en-US">English</option>
+                            <option value="ja-JP">日本語</option>
+                            <option value="ko-KR">한국어</option>
+                        </select>
+                    </div>
+                    <div class="chat-controls-right">
+                        <button class="chat-submit">提交问题</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-response"></div>
+        </div>
+    </div>
+
+    <script src="quiz.js"></script>
+    <!-- Add speech recognition script -->
+    <script src="speech.js"></script>
+</body>
+</html>
